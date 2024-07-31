@@ -9,6 +9,7 @@ const Login = () => {
   });
   const [identifierType, setIdentifierType] = useState('Email or Mobile');
   const navigate = useNavigate();
+  const baseUrl = import.meta.env.VITE_BASE_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,7 +47,7 @@ const Login = () => {
     e.preventDefault();
     const { identifier, password } = loginData;
     try{
-        const res = await axios.post('http://localhost:3000/student/login',{
+        const res = await axios.post(`${baseUrl}student/login`,{
             email:identifier,
             password,
             mobile:identifier

@@ -9,10 +9,11 @@ const Teacher = () => {
   const [coordinates, setCoordinates] = useState({ lat: null, lng: null });
   const [teachers, setTeachers] = useState([]);
   const [sortedTeachers, setSortedTeachers] = useState([]);
+  const baseUrl = import.meta.env.VITE_BASE_URL;
  
   const fetchTeachers = async ()=>{
     try{
-      const res = await axios.get('http://localhost:3000/teacher');
+      const res = await axios.get(`${baseUrl}teacher`);
       setTeachers(res.data.teachers);
     }catch(e){
       console.error(e);

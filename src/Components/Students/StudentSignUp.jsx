@@ -10,6 +10,7 @@ const SignUp = () => {
     password: '',
     dp: null,
   });
+  const baseUrl = import.meta.env.VITE_BASE_URL;
 
   const [loading, setLoading] = useState(false);
   const [imgUri, setImgUri] = useState("");
@@ -45,7 +46,7 @@ const SignUp = () => {
       
       const {name,email,mobile,standard,password}=formData;
      try{
-        const res= await axios.post('http://localhost:3000/student/register',{name,email,mobile,standard,password,profilePic});
+        const res= await axios.post(`${baseUrl}student/register`,{name,email,mobile,standard,password,profilePic});
         if(res.status===201){
           alert("Student registered successfully");
           window.location.href="/";

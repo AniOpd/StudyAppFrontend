@@ -10,6 +10,7 @@ const TeacherLoginForm = () => {
 
   
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const baseUrl = import.meta.env.VITE_BASE_URL;
 
   useEffect(() => {
     if (emailPattern.test(identifier)) {
@@ -33,7 +34,7 @@ const TeacherLoginForm = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/teacher/login', dataToSend);
+      const response = await axios.post(`${baseUrl}teacher/login`, dataToSend);
         console.log(response.data);
         alert('Login successful');
         localStorage.clear();

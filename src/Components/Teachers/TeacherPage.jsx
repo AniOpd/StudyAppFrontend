@@ -9,12 +9,13 @@ function TeacherPage() {
   const {id}= useParams();
   const [teacher, setTeacher] = useState({});
   const [loading, setLoading] = useState(true);
+  const baseUrl = import.meta.env.VITE_BASE_URL;
 
 
   useEffect(()=>{
     const fetchTeachers = async ()=>{
       try{
-        const res = await axios.get(`http://localhost:3000/teacher/${id}`);
+        const res = await axios.get(`${baseUrl}teacher/${id}`);
         if(res.status === 200){
           setTeacher(res.data.teacherDetails);
           setLoading(false);

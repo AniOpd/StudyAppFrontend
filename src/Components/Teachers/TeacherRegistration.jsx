@@ -20,6 +20,7 @@ const TeacherRegistrationForm = () => {
   const [dp, setDp] = useState(null);
   const [sv, setSv] = useState(null);
   const navigate = useNavigate();
+  const baseUrl = import.meta.env.VITE_BASE_URL;
 
 
 
@@ -109,7 +110,7 @@ const TeacherRegistrationForm = () => {
               });
           }
     try {
-      const response = await axios.post('http://localhost:3000/teacher/register',{
+      const response = await axios.post(`${baseUrl}teacher/register`,{
         name,email,location,subjects,experience,highestqualification,profilePic,mobile,password,bankDetails,aadharNumber,sampleVideo
       });
       alert(response.data.message);
