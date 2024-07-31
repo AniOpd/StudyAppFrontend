@@ -16,6 +16,8 @@ import TeacherPage from './Components/Teachers/TeacherPage.jsx';
 import StudentSignUp from './Components/Students/StudentSignUp.jsx';
 import StudentLogin from './Components/Students/StudentsLogin.jsx';
 import TeacherLogin from './Components/Teachers/TeacherLogin.jsx';
+import ContactUs from './Components/ContactPage/ContactUs.jsx';
+import Aboutus from './Components/AboutPage/AboutPage.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +29,8 @@ const router = createBrowserRouter(
       <Route path="studentSignUp" element={<StudentSignUp />} />
       <Route path="studentLogin" element={<StudentLogin />} />
       <Route path="teacherLogin" element={<TeacherLogin />} />
+      <Route path="contactUs" element={<ContactUs />} />
+      <Route path="about" element={<Aboutus />} />
     </Route>
   )
 );

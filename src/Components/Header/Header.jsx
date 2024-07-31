@@ -20,7 +20,7 @@ const Header = () => {
         },
         {
             name:"contact us",
-            link:"/contact",
+            link:"/contactUs",
             show:true
         },
         {
