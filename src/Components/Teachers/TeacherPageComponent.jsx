@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { Link,useNavigate } from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import axios from 'axios';
 
-const TeacherProfile = ({ teacher, loggedIn }) => {
-
+const TeacherProfile = ({ teacher }) => {
     const [isStudent, setIsStudent] = useState(false);
-
+    const classes = useSelector(state => state.classes)||[];
+    const navigate = useNavigate();
+    const baseUrl = import.meta.env.VITE_BASE_URL;
+    const id = localStorage.getItem('user');
     useEffect(()=>{
         if(localStorage.getItem('isStudent')){
             setIsStudent(true);
         }
-    })
+    },[])
 
   const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
 
@@ -25,9 +30,40 @@ const TeacherProfile = ({ teacher, loggedIn }) => {
   };
 
   const currentReview = teacher.reviews[currentReviewIndex];
+ 
 
-  const handleAddClass = ()=>{
+  const handleAddClass = async ()=>{
+    console.log(classes);
+    if(!isStudent){
+        alert('Please login as a student to book a class');
+        navigate('/studentLogin');
+    }
+    else if(classes.find(cls=>cls.teacherId===teacher._id)){
+        alert('You have already added a class with this teacher');
+    }
+    else{
+      try{
+        const res = await axios.post(`${baseUrl}student/addclass/${id}`,{
+          teacherId:teacher._id
+     }
+      );
+     if(res.status===200){
+        alert('Class added successfully');
+        navigate('/');
+     }else{
+        alert('class already added');
+        navigate('/teachers');
+     }
+      }catch(e){
+        console.error(e);
+        alert('class already added');
+       navigate('/teachers');
+      }
+    }
   }
+
+
+  
 
 
 

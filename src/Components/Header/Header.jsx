@@ -1,11 +1,14 @@
 // src/Navbar.j
 import React, { useEffect, useState } from 'react';
 import { Link,NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../Redux/Auth/AuthSlice.js';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isTeacher, setIsTeacher] = useState(false);
   const [isStudent, setIsStudent] = useState(false);
+  const dispatch = useDispatch();
 
     const navbarComponents=[
         {
@@ -30,12 +33,12 @@ const Header = () => {
         },
         {
             name:"classes",
-            link:"/classes/:studentId",
+            link:"/studentClasses",
             show:isStudent
         },
         {
             name:"classes",
-            link:"/classes/:teacherId",
+            link:"/teacherClasses",
             show:isTeacher
         },
         {
@@ -64,19 +67,24 @@ const Header = () => {
             show:!isTeacher && !isStudent
         },
         {
-            name:"StudentProfile",
-            link:"/student/:id",
+            name:"Profile",
+            link:"/studentProfile",
             show:isStudent
         },
         {
-            name:"TeacherProfile",
-            link:"/teacher/:id",
+            name:"Profile",
+            link:"/teacherProfile",
             show:isTeacher
         },
         {
             name:"Pyament History",
-            link:"/payment/:id",
-            show:isTeacher || isStudent
+            link:"/studentPaymentHistory",
+            show:isStudent
+        },
+        {
+            name:"Pyament History",
+            link:"/teacherPaymentHistory",
+            show:isTeacher
         }
     ]
 
@@ -84,9 +92,9 @@ const Header = () => {
     useEffect(()=>{
         const isTeacher = localStorage.getItem("isTeacher");
         const isStudent = localStorage.getItem("isStudent");
-        if(isTeacher){
+        if(isTeacher==="true"){
             setIsTeacher(true);
-        }else if(isStudent){
+        }else if(isStudent==="true"){
             setIsStudent(true);
         }
     },[])
@@ -106,12 +114,12 @@ const Header = () => {
             navbarComponents.map((component,index)=>{
                 if(component.name==="logout" && component.show){
                     return <button key={index} onClick={()=>{
-                        localStorage.clear();
-                        window.location.reload();
+                        dispatch(logout());
+                        window.location.href = '/';
                     }} className="btn btn-ghost">{component.name}</button>
                 }
-                return component.show && <NavLink key={index} to={component.link}  className={({isActive})=>`duration-200 ${isActive ? "text-yellow-500" : "text-black"} hover:bg-yellow-400 btn btn-ghost `}>{component.name}</NavLink>
-            })
+                  return component.show && <NavLink key={index} to={component.link}  className={({isActive})=>`duration-200 ${isActive ? "text-yellow-500" : "text-black"} hover:bg-yellow-400 btn btn-ghost `}>{component.name}</NavLink>
+          })
         }
         </div>
         <button className="lg:hidden btn btn-ghost" onClick={toggleMenu}>
@@ -123,7 +131,13 @@ const Header = () => {
             <div className='flex flex-col'>
             {
                 navbarComponents.map((component,index)=>{
-                    return component.show && <NavLink key={index} to={component.link} activeClassName="btn btn-ghost active" className="btn btn-ghost">{component.name}</NavLink>
+                    if(component.name==="logout" && component.show){
+                        return <button key={index} onClick={()=>{
+                            dispatch(logout());
+                            window.location.href = '/';
+                        }} className="btn btn-ghost">{component.name}</button>
+                    }
+                    return component.show && <NavLink key={index} to={component.link}  className={({isActive})=>`duration-200 ${isActive ? "text-yellow-500" : "text-black"} hover:bg-yellow-400 btn btn-ghost `}>{component.name}</NavLink>
                 })
             }
             </div>

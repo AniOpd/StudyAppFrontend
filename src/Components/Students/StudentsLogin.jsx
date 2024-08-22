@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginStudent } from '../../Redux/Auth/AuthSlice.js';
 
 const Login = () => {
   const [loginData, setLoginData] = useState({
@@ -10,6 +12,8 @@ const Login = () => {
   const [identifierType, setIdentifierType] = useState('Email or Mobile');
   const navigate = useNavigate();
   const baseUrl = import.meta.env.VITE_BASE_URL;
+
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,11 +56,10 @@ const Login = () => {
             password,
             mobile:identifier
         })
-        localStorage.setItem("token",res.data.token);
-        localStorage.setItem("id",res.data.id);
-        localStorage.setItem("isStudent",true);
         console.log(res.data);
-        window.location.href="/";
+        dispatch(loginStudent({user:res.data.user,token:res.data.token,classes:res.data.classes,isVerified:res.data.isVerified}));
+        alert("Login successful");
+        window.location.href = '/';
     }catch(e){
         console.error(e);
         alert("Invalid credentials");

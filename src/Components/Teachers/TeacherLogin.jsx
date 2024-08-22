@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Loading from '../Utils/Loading.jsx'
+import { useDispatch,useSelector } from 'react-redux';
+import { loginTeacher } from '../../Redux/Auth/AuthSlice.js';
 
 const TeacherLoginForm = () => {
   const [identifier, setIdentifier] = useState(''); 
   const [password, setPassword] = useState('');
   const [label, setLabel] = useState('Email or Mobile'); 
   const [loading, setLoading] = useState(false);
-
+  const dispatch = useDispatch();
   
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const baseUrl = import.meta.env.VITE_BASE_URL;
+
 
   useEffect(() => {
     if (emailPattern.test(identifier)) {
@@ -35,14 +38,10 @@ const TeacherLoginForm = () => {
 
     try {
       const response = await axios.post(`${baseUrl}teacher/login`, dataToSend);
-        console.log(response.data);
+        dispatch(loginTeacher(response.data));
+        setLoading(false);
         alert('Login successful');
-        localStorage.clear();
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('id', response.data.id);
-        localStorage.setItem('isTeacher', true);
         window.location.href = '/';
-        setLoading(true);
     } catch (error) {
       console.error('Error logging in:', error);
       alert('Invalid credentials');

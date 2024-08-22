@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const AboutUs = () => {
   return (
@@ -13,7 +14,9 @@ const AboutUs = () => {
             Discover the perfect teacher within your reach.
           </p>
           <button className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105">
-            Explore Teachers
+          <Link to="/teachers">
+            Get Started
+            </Link>
           </button>
         </div>
       </section>
@@ -68,8 +71,10 @@ const AboutUs = () => {
             Are you new to EdTech Home Tuition? Get a **20% discount** on your first class when you sign up today! 
             Take advantage of this limited-time offer and start your journey towards academic success.
           </p>
-          <button className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105">
-            Claim Your Discount
+          <button className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105" >
+          <Link to="/teachers">
+            Get Started
+            </Link>
           </button>
         </div>
       </section>
@@ -115,7 +120,9 @@ const AboutUs = () => {
             Ready to take your learning to the next level? Start exploring our platform now and find the perfect teacher for you.
           </p>
           <button className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105">
-            Explore Teachers
+          <Link to="/teachers">
+            Get Started
+            </Link>
           </button>
         </div>
       </section>

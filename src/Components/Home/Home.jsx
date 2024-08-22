@@ -2,6 +2,7 @@ import React from 'react';
 import { useSpring, animated } from 'react-spring';
 import { FaStar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   // Animations for the hero section
@@ -27,7 +28,9 @@ const HomePage = () => {
             className="mt-8 bg-blue-500 text-white font-bold py-3 px-6 rounded-lg uppercase tracking-wide shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105"
             whileHover={{ scale: 1.05, backgroundColor: '#1d4ed8' }}
           >
-            Get Started
+           <Link to="/teachers">
+           Get Started
+           </Link>
           </motion.button>
         </animated.div>
       </section>
@@ -101,7 +104,9 @@ const HomePage = () => {
             className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg uppercase tracking-wide shadow-lg transition-transform transform hover:scale-105"
             whileHover={{ scale: 1.05 }}
           >
-            Sign Up Now
+           <Link to="/teachers">
+            Get Started
+            </Link>
           </motion.button>
         </div>
       </section>

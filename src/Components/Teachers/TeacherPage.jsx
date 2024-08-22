@@ -17,7 +17,7 @@ function TeacherPage() {
       try{
         const res = await axios.get(`${baseUrl}teacher/${id}`);
         if(res.status === 200){
-          setTeacher(res.data.teacherDetails);
+          setTeacher(res.data);
           setLoading(false);
         }else{
           alert("something went wrong");
@@ -35,11 +35,13 @@ function TeacherPage() {
     return <Loading />
   }
 
+ if(!loading){
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
       <TeacherProfile teacher={teacher} />
     </div>
   )
 }
+ } 
 
 export default TeacherPage
