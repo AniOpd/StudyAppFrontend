@@ -13,8 +13,6 @@ StudyGharPar website, a platform connecting home tutors and students.
 ## Features
 
 - User authentication and authorization
-- Real-time updates with Socket.io
-- File uploads with Multer
 - Email notifications with Nodemailer
 - Integration with Google Maps API
 
