@@ -4,9 +4,10 @@ import axios from 'axios';
 const StudentClassesPage = () => {
   const [studentClasses, setStudentClasses] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedEmail, setSelectedEmail] = useState('');
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(0);
+  const [loading, setLoading] = useState(false);
   const id = localStorage.getItem('user');
   const token = localStorage.getItem('token');
   const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -31,35 +32,58 @@ const StudentClassesPage = () => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const handleTakeClass = (email) => {
-    setSelectedEmail(email);
-    setShowPopup(true);
-    setTimer(60); // Start the timer when popup is shown
+  const handleTakeClass = async (studentClass) => {
+    setLoading(true);
+    try {
+      const res = await axios.post(`${baseUrl}classes/genrateOtp`, { 
+        teacherId: id, 
+        studentEmail: studentClass.studentId.email 
+      });
+      alert(res.data.message);
+      if (res.status === 200) {
+        setSelectedStudent(studentClass);
+        setShowPopup(true);
+        setTimer(60);
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Failed to generate OTP. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleOtpSubmit = () => {
-    axios.post(`${baseUrl}teacher/classes/verify-otp`, {
-      email: selectedEmail,
-      otp: otp
-    }, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(response => {
-      alert('OTP Verified and Class Taken Successfully');
-      setShowPopup(false);
-    })
-    .catch(error => console.error(error));
+  const handleOtpSubmit = async () => {
+   if(selectedStudent){
+    try{
+     const res = await axios.post(`${baseUrl}classes/TakeClass`, {
+       teacherId: id,
+       studentId: selectedStudent.studentId._id,
+       otp
+     });
+     alert(res.data.message);
+     if (res.status === 200) {
+       setShowPopup(false);
+       setOtp('');
+       setTimer(0);
+       window.location.reload();
+     }
+    }catch(e){
+      console.error(e);
+      alert('Failed to take class. Please try again.');
+     }
+   }
   };
 
   const handleResendOtp = () => {
     axios.post(`${baseUrl}teacher/classes/resend-otp`, {
-      email: selectedEmail
+      email: selectedStudent.studentId.email
     }, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(response => {
       alert('OTP Resent Successfully');
-      setTimer(60); // Restart the timer after resending OTP
+      setTimer(60); 
     })
     .catch(error => console.error(error));
   };
@@ -109,10 +133,34 @@ const StudentClassesPage = () => {
                   <td className="text-gray-700 p-4">{studentClass.classesLeft}</td>
                   <td className="text-gray-700 p-4">
                     <button
-                      onClick={() => handleTakeClass(studentClass.studentId.email)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                      onClick={() => handleTakeClass(studentClass)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center justify-center"
+                      disabled={loading}
                     >
-                      Take Class
+                      {loading ? (
+                        <svg
+                          className="animate-spin h-5 w-5 mr-3 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v8H4z"
+                          ></path>
+                        </svg>
+                      ) : (
+                        'Take Class'
+                      )}
                     </button>
                   </td>
                 </tr>
@@ -152,10 +200,34 @@ const StudentClassesPage = () => {
               </div>
               <div className="mt-6">
                 <button
-                  onClick={() => handleTakeClass(studentClass.studentId.email)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-200"
+                  onClick={() => handleTakeClass(studentClass)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-200 flex items-center justify-center"
+                  disabled={loading}
                 >
-                  Take Class
+                  {loading ? (
+                    <svg
+                      className="animate-spin h-5 w-5 mr-3 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8H4z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    'Take Class'
+                  )}
                 </button>
               </div>
             </div>
@@ -164,10 +236,12 @@ const StudentClassesPage = () => {
       </div>
 
       {/* Popup Component */}
-      {showPopup && (
+      {showPopup && selectedStudent && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Enter OTP for {selectedEmail}</h2>
+            <h2 className="text-xl font-bold mb-4">
+              Enter OTP for {selectedStudent.studentId.email}
+            </h2>
             <input
               type="text"
               value={otp}
